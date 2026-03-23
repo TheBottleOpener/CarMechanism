@@ -1,5 +1,7 @@
 //The drive :D
 
+//changed lines 81 & 85
+
 const roady = 1;
 var trees = [];
 var treeCount = 20;
@@ -76,10 +78,11 @@ function draw() {
   stroke("black")
 
   //car
+  var shift_vec = [0 * cos(rad) - 25 * sin(rad), 0 * sin(rad) + 25 * cos(rad)] // changed this
 
   fill("gray")
 
-  translate(width/2, height/2)
+  translate(width/2 - shift_vec[0], height/2 - shift_vec[1]) // changed this
   rotate(rad)
   rect(0, 0, 100, 50)
   
