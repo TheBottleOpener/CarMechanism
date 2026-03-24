@@ -15,10 +15,11 @@ var maxacceletarion = 10
 var acceleration = 0
 var cur_acceleration = 0
 
+// Replace this for Arduino code
 var turningLeft = false;
 var turningRight = false;
 var accelerating = false;
-
+// end of replace
 
 function setup() {
   resizeCanvas(windowWidth, windowHeight);
@@ -30,6 +31,7 @@ function setup() {
 }
 
 function draw() {
+  // Replace this for Arduino code
   if (accelerating){
     acceleration = maxacceletarion
   } else {
@@ -42,6 +44,7 @@ function draw() {
   if (turningRight){
     newdirection += 2
   }
+  // end of replace
 
   newdirection = min(max(newdirection,direction -  maxturning),direction + maxturning)
 
@@ -68,7 +71,7 @@ function draw() {
   //road
   fill("black")
   strokeWeight(180);
-  let newroady = wrap(roady + position[1],0,height + 100)
+  let newroady = wrap(roady + position[1],-140,height + 140)
   line(0,newroady,width,newroady)
   strokeWeight(2)
 
