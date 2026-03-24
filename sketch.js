@@ -42,6 +42,7 @@ function draw() {
   }
 
   cur_acceleration = lerp(cur_acceleration, acceleration, 0.1)
+
   var rad = direction * (PI/180)
   var direction_vec = [cur_acceleration * cos(rad), cur_acceleration * sin(rad)]
 
@@ -78,11 +79,11 @@ function draw() {
   stroke("black")
 
   //car
-  var shift_vec = [0 * cos(rad) - 25 * sin(rad), 0 * sin(rad) + 25 * cos(rad)] // changed this
+  var shift_vec = [-25 * sin(rad),25 * cos(rad)]
 
   fill("gray")
 
-  translate(width/2 - shift_vec[0], height/2 - shift_vec[1]) // changed this
+  translate(width/2 - shift_vec[0], height/2 - shift_vec[1])
   rotate(rad)
   rect(0, 0, 100, 50)
   
