@@ -1,6 +1,5 @@
 //The drive :D
-
-//changed lines 81 & 85
+//Base driving code created by Julian Scaggs, pretty much all the math and stuff to handle driving
 
 const roady = 1;
 var trees = [];
@@ -8,8 +7,11 @@ var treeCount = 20;
 
 
 var position = [0,0]
-var direction = 1
+var direction = 0
+var newdirection = 0
+var maxturning = 45
 
+var maxacceletarion = 10
 var acceleration = 0
 var cur_acceleration = 0
 
@@ -29,19 +31,23 @@ function setup() {
 
 function draw() {
   if (accelerating){
-    acceleration = 10
+    acceleration = maxacceletarion
   } else {
     acceleration = 0
   }
 
   if (turningLeft){
-    direction -= 2
+    newdirection -= 2
   }
   if (turningRight){
-    direction += 2
+    newdirection += 2
   }
 
+  newdirection = min(max(newdirection,direction -  maxturning),direction + maxturning)
+
   cur_acceleration = lerp(cur_acceleration, acceleration, 0.1)
+
+  direction = lerp(direction, newdirection, max(cur_acceleration / (maxacceletarion * 4),0))
 
   var rad = direction * (PI/180)
   var direction_vec = [cur_acceleration * cos(rad), cur_acceleration * sin(rad)]
