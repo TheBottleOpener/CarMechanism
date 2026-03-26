@@ -1,9 +1,5 @@
 //The drive :D
 //Base driving code created by Julian Scaggs, pretty much all the math and stuff to handle driving
-let serial;
-let latestData = 0;
-let latestData2 = 0;
-let latestData3 = 0;
 
 const roady = 1;
 var trees = [];
@@ -19,27 +15,33 @@ var maxacceletarion = 10
 var acceleration = 0
 var cur_acceleration = 0
 
+// Replace this for Arduino code
+var turningLeft = false;
+var turningRight = false;
+var accelerating = false;
+// end of replace
+
 function setup() {
   resizeCanvas(windowWidth, windowHeight);
   for (let iteration = 0; iteration < treeCount; iteration++) {
     trees.push([random(width + 100),random(height)])
     
   }
+
 }
 
 function draw() {
-  
   // Replace this for Arduino code
-  if (false){
-    acceleration = latestData
+  if (accelerating){
+    acceleration = maxacceletarion
   } else {
     acceleration = 0
   }
 
-  if (false){
+  if (turningLeft){
     newdirection -= 2
   }
-  if (false){
+  if (turningRight){
     newdirection += 2
   }
   // end of replace
@@ -76,6 +78,7 @@ function draw() {
   let lineLengths = 100
   let startPos = wrap(position[0],0,lineLengths*2) - lineLengths
 
+  console.log(startPos)
   while(startPos < width){
     fill("yellow")
     stroke("yellow")
@@ -93,10 +96,6 @@ function draw() {
   rotate(rad)
   rect(0, 0, 100, 50)
   
-  translate(0, 0)
-  text('Potentio Value: ' + int(latestData), 20, 30);
-  text('Pressure Value: ' + int(latestData2), 20, 50);
-  text('Flight Value: ' + int(latestData3), 20, 70);
 }
 
 function wrap(value, min, max) {
@@ -104,31 +103,28 @@ function wrap(value, min, max) {
   return min + ((((value - min) % range) + range) % range);
 }
 
-function setupSerial() {
-  serial = new p5.SerialPort();
-
-  serial.list();
-  serial.open('COM9');
-  serial.on('data', gotData);
+function keyPressed(){
+    if (key === "a"){
+      turningLeft = true
+    }
+    if (key === "d"){
+      turningRight = true
+    }
+    if (key === "w"){
+      accelerating = true
+    }
 }
 
-function gotData() {
-  let currentString = serial.readLine();
-  console.log(currentString)
-  if (!currentString) return;
-  currentString = currentString.trim();
-  if (!currentString) return;
-
-  let parts = currentString.split(', ');
-  if (parts.length === 3) {
-    let potentioVal = Number(parts[0]);
-    let pressureVal = Number(parts[1]);
-    let flightVal = Number(parts[2]);
-
-    if (!isNaN(potentioVal)) latestData = potentioVal;
-    if (!isNaN(pressureVal)) latestData2 = pressureVal;
-    if (!isNaN(flightVal)) latestData3 = flightVal;
-  }
+function keyReleased(){
+    if (key === "a"){
+      turningLeft = false
+    }
+    if (key === "d"){
+      turningRight = false
+    }
+    if (key === "w"){
+      accelerating = false
+    }
 }
 
 // Windows resizing
