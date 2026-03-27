@@ -15,38 +15,28 @@ var direction = 0
 var newdirection = 0
 var maxturning = 45
 
-var maxacceletarion = 10
+var maxacceletarion = 25
 var acceleration = 0
 var cur_acceleration = 0
 
 function setup() {
   resizeCanvas(windowWidth, windowHeight);
+  setupSerial();
   for (let iteration = 0; iteration < treeCount; iteration++) {
     trees.push([random(width + 100),random(height)])
     
   }
+
 }
 
 function draw() {
-  
-  // Replace this for Arduino code
-  if (false){
-    acceleration = latestData
-  } else {
-    acceleration = 0
-  }
+  newdirection = latestData;
 
-  if (false){
-    newdirection -= 2
-  }
-  if (false){
-    newdirection += 2
-  }
-  // end of replace
+  acceleration = map(latestData2,0,100,0,maxacceletarion);
 
   newdirection = min(max(newdirection,direction -  maxturning),direction + maxturning)
 
-  cur_acceleration = lerp(cur_acceleration, acceleration, 0.1)
+  cur_acceleration = lerp(cur_acceleration, acceleration, 0.01)
 
   direction = lerp(direction, newdirection, max(cur_acceleration / (maxacceletarion * 4),0))
 
@@ -95,9 +85,6 @@ function draw() {
   translate(-(width/2 - shift_vec[0]), -(height/2 - shift_vec[1]))
   
   translate(0, 0)
-  text('Potentio Value: ' + int(latestData), 20, 30);
-  text('Pressure Value: ' + int(latestData2), 20, 50);
-  text('Flight Value: ' + int(latestData3), 20, 70);
 }
 
 function wrap(value, min, max) {
