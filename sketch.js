@@ -30,6 +30,8 @@ function setup() {
 }
 
 function preload() {
+  dash = loadImage('dash.png');
+  wheel = loadImage('wheel.png');
   img = loadImage('car2.png');
 }
 
@@ -90,9 +92,33 @@ function draw() {
   rotate(rad)
   img.resize(130,100);
   image(img, -65, -50);
+  rotate(-rad)
   translate(-(width/2 - shift_vec[0]), -(height/2 - shift_vec[1]))
   
   translate(0, 0)
+
+  // Speed
+
+  fill("white")
+  rect(width * 0.4, (height-(width * 0.0672947510094213)),width * 0.3, height)
+
+  fill("black")
+  textSize(50)
+  text(str(cur_acceleration),width/2 - 100, height - 20)
+  text("spead",width/2 - 100, height - 70)
+
+  // Dash
+  dash.resize(width,width * 0.1177658142664872);
+  image(dash,0,(height - width * 0.1177658142664872) + 4);
+
+  var turnedRad = (direction - newdirection - 45) * (PI/180)
+
+  var wheelVec = [150*cos(turnedRad) - 150*sin(turnedRad), 150*sin(turnedRad) + 150*cos(turnedRad)]
+  
+  translate((width * 0.3) - wheelVec[0], (height-(width * 0.0672947510094213)) - wheelVec[1]);
+  wheel.resize(300,300);
+  rotate(turnedRad)
+  image(wheel,0,0)
 }
 
 function wrap(value, min, max) {
