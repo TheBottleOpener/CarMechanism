@@ -29,14 +29,21 @@ function setup() {
 
 }
 
+function preload() {
+  img = loadImage('car2.png');
+}
+
 function draw() {
   newdirection = latestData;
 
   acceleration = map(latestData2,0,100,0,maxacceletarion);
 
   newdirection = min(max(newdirection,direction -  maxturning),direction + maxturning)
-
-  cur_acceleration = lerp(cur_acceleration, acceleration, 0.01)
+  if(latestData3 > 200){
+    cur_acceleration = lerp(cur_acceleration, acceleration, 0.01)
+  }else{
+    cur_acceleration = lerp(cur_acceleration, acceleration, 0.1)
+  }
 
   direction = lerp(direction, newdirection, max(cur_acceleration / (maxacceletarion * 4),0))
 
@@ -81,7 +88,8 @@ function draw() {
 
   translate(width/2 - shift_vec[0], height/2 - shift_vec[1])
   rotate(rad)
-  rect(0, 0, 100, 50)
+  img.resize(130,100);
+  image(img, -65, -50);
   translate(-(width/2 - shift_vec[0]), -(height/2 - shift_vec[1]))
   
   translate(0, 0)
