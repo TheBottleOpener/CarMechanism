@@ -77,13 +77,16 @@ function draw() {
   //road (this will wrap across the y axis)
   fill("black")
   strokeWeight(180);
+
   let newroady = wrap(roady + position[1],-140,height + 140)
   line(0,newroady,width,newroady)
-  strokeWeight(2)
 
+  //This is used for the road lines (they look like you are moving across X)
+  strokeWeight(2)
   let lineLengths = 100
   let startPos = wrap(position[0],0,lineLengths*2) - lineLengths
 
+  //Draws the lines
   while(startPos < width){
     fill("yellow")
     stroke("yellow")
@@ -97,16 +100,21 @@ function draw() {
 
   fill("gray")
 
+  //Shifts and rotates so car is in the center
   translate(width/2 - shift_vec[0], height/2 - shift_vec[1])
   rotate(rad)
+
+  //Image
   img.resize(130,100);
   image(img, -65, -50);
+
+  //undos the shifts and rotates
   rotate(-rad)
   translate(-(width/2 - shift_vec[0]), -(height/2 - shift_vec[1]))
   
   translate(0, 0)
 
-  // Speed
+  // Speed (Just shows a white block with a text)
   fill("white")
   rect(width * 0.4, (height-(width * 0.0672947510094213)),width * 0.3, height)
 
@@ -115,25 +123,30 @@ function draw() {
   text(str(cur_acceleration),width/2 - 100, height - 20)
   text("spead",width/2 - 100, height - 70)
 
-  // Dash
+  // Dash (Just an image of the dash)
   dash.resize(width,width * 0.1177658142664872);
   image(dash,0,(height - width * 0.1177658142664872) + 4);
 
-  var turnedRad = (-(direction - newdirection - 45)) * (PI/180)
 
+  //Sets up radian and vector specifically for the wheel
+  var turnedRad = (-(direction - newdirection - 45)) * (PI/180)
   var wheelVec = [150*cos(turnedRad) - 150*sin(turnedRad), 150*sin(turnedRad) + 150*cos(turnedRad)]
   
+  //Shifts towards center
   translate((width * 0.3) - wheelVec[0], (height-(width * 0.0672947510094213)) - wheelVec[1]);
-  wheel.resize(300,300);
   rotate(turnedRad)
+  wheel.resize(300,300);
   image(wheel,0,0)
 }
 
+//Used for wrapping, pretty much if it moves out of one of these ranges it will wrap around back to the opposite side
 function wrap(value, min, max) {
   let range = max - min
   return min + ((((value - min) % range) + range) % range);
 }
 
+
+//Serial data setup
 function setupSerial() {
   serial = new p5.SerialPort();
 
@@ -142,6 +155,7 @@ function setupSerial() {
   serial.on('data', gotData);
 }
 
+//Gets data
 function gotData() {
   let currentString = serial.readLine();
   console.log(currentString)
