@@ -5,23 +5,27 @@ let latestData = 0;
 let latestData2 = 0;
 let latestData3 = 0;
 
+//used for displaying treed and road
 const roady = 1;
 var trees = [];
 var treeCount = 20;
 
-
+//Movement vars
 var position = [0,0]
 var direction = 0
 var newdirection = 0
-var maxturning = 45
-
-var maxacceletarion = 25
 var acceleration = 0
 var cur_acceleration = 0
+
+//constants for moving
+var maxturning = 45
+var maxacceletarion = 25
 
 function setup() {
   resizeCanvas(windowWidth, windowHeight);
   setupSerial();
+
+  //Create the random trees
   for (let iteration = 0; iteration < treeCount; iteration++) {
     trees.push([random(width + 100),random(height)])
     
@@ -30,17 +34,23 @@ function setup() {
 }
 
 function preload() {
+  // Load the images
   dash = loadImage('dash.png');
   wheel = loadImage('wheel.png');
   img = loadImage('car2.png');
 }
 
 function draw() {
+  //Set the direction data
   newdirection = latestData;
 
+  //Maps the data to be within he acceleration
   acceleration = map(latestData2,0,100,0,maxacceletarion);
 
+  //Turn according to speed
   newdirection = min(max(newdirection,direction -  maxturning),direction + maxturning)
+
+  //This is a braking function and speeding function
   if(latestData3 > 200){
     cur_acceleration = lerp(cur_acceleration, acceleration, 0.01)
   }else{
@@ -49,23 +59,22 @@ function draw() {
 
   direction = lerp(direction, newdirection, max(cur_acceleration / (maxacceletarion * 4),0))
 
+  //calculate rad (need for rotation) & calculate the vector which is added to position for movment
   var rad = direction * (PI/180)
   var direction_vec = [cur_acceleration * cos(rad), cur_acceleration * sin(rad)]
-
-
   position[0] += direction_vec[0]
   position[1] += direction_vec[1]
 
-
+  //Draw background
   background("green")
 
-  //trees
+  //trees (these wrap around the sides of the screen)
   trees.forEach(element => {
     fill("brown")
     circle(wrap(element[0] + position[0],0,width + 100),wrap(element[1] + position[1],0,height + 100),10)
   });
 
-  //road
+  //road (this will wrap across the y axis)
   fill("black")
   strokeWeight(180);
   let newroady = wrap(roady + position[1],-140,height + 140)
@@ -98,7 +107,6 @@ function draw() {
   translate(0, 0)
 
   // Speed
-
   fill("white")
   rect(width * 0.4, (height-(width * 0.0672947510094213)),width * 0.3, height)
 
@@ -111,7 +119,7 @@ function draw() {
   dash.resize(width,width * 0.1177658142664872);
   image(dash,0,(height - width * 0.1177658142664872) + 4);
 
-  var turnedRad = (direction - newdirection - 45) * (PI/180)
+  var turnedRad = (-(direction - newdirection - 45)) * (PI/180)
 
   var wheelVec = [150*cos(turnedRad) - 150*sin(turnedRad), 150*sin(turnedRad) + 150*cos(turnedRad)]
   
